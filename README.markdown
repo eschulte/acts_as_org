@@ -4,8 +4,11 @@ ActsAsOrg
 Provides org-mode actions for ActiveFile records.  See the following
 for information on the relevant resources.
 
-- ActiveFile
+- ActiveFile (from [github](http://github.com/eschulte/active_file/tree/master))
 - Emacs (22 or later)
+  - for Linux use your package manager
+  - for Mac try [Apple](http://www.apple.com/downloads/macosx/unix_open_source/carbonemacspackage.html)
+  - for Windows try [GNU](http://ftp.gnu.org/gnu/emacs/windows/emacs-22.3-bin-i386.zip)
 
 Installation
 ============
@@ -14,18 +17,8 @@ From the root of your rails project execute the following
 
 > ruby script/plugin install git://github.com/eschulte/acts\_as\_org.git
 
-This plugin requires
-
-- Emacs (at least version 22, preferably 23) Use your package manager
-  if you have one.  Otherwise, Mac users should get it [from
-  Apple](http://www.apple.com/downloads/macosx/unix_open_source/carbonemacspackage.html).
-  Windows users can get it [from
-  GNU](http://ftp.gnu.org/gnu/emacs/windows/emacs-22.3-bin-i386.zip).
-- ActiveFile from [github](http://github.com/eschulte/active_file/tree/master)
-
 Example
 =======
-
 
 
 Licence
