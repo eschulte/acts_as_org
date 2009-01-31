@@ -21,6 +21,11 @@ From the root of your rails project execute the following
 
 > ruby script/plugin install git://github.com/eschulte/acts\_as\_org.git
 
+OR IF YOU ARE USING GIT FOR VERSION CONTROL AND YOU'D RATHER INCLUDE
+THIS AS A SUBMODULE EXECUTE THE FOLLOWING
+
+> git submodule add git://github.com/eschulte/acts\_as\_org.git vendor/plugins/acts\_as\_org
+
 Example
 =======
 
