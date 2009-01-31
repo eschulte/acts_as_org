@@ -20,16 +20,17 @@ module ActiveFile
       
       module InstanceMethods
         def html_path
-          File.join(File.dirname(self.path), ActiveFile::Acts::Org::EXP_PREFIX + File.basename(self.path))
+          File.join(File.dirname(self.full_path),
+                    ActiveFile::Acts::Org::EXP_PREFIX + File.basename(self.path))
         end
         
         def clean_html?
-          File.exist?(self.html_path) and File.mtime(self.html_path) > File.mtime(self.path)
+          File.exist?(self.html_path) and File.mtime(self.html_path) > File.mtime(self.full_path)
         end
 
         def to_html(options = {})
-          options = {:postamble => true}.merge(options)
-          self.class.emacs_run "(org-file-to-html  \"#{self.path}\")" unless self.clean_html?
+          options = {:postamble => false}.merge(options)
+          self.class.emacs_run "(org-file-to-html  \"#{self.full_path}\")" unless self.clean_html?
           return nil unless File.exist?(self.html_path)
           html = File.read(self.html_path)
           # extract the body portion
