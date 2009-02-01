@@ -1,6 +1,9 @@
 module ActiveFile
   module Acts
     module Org
+      # *note*: if you change this value, you must also change the
+      # value of `org-interaction-prefix' in
+      # ../elisp/org-interaction.el
       EXP_PREFIX = ".exported_"
       
       def self.included(base)
@@ -16,23 +19,26 @@ module ActiveFile
         def emacs_run(command)
           %x{emacs -Q -batch -l #{File.join(File.dirname(__FILE__), "..", "elisp", "org-interaction.el")} -eval '#{command}'}
         end
-      end
-      
-      module InstanceMethods
-        def html_path
-          File.join(File.dirname(self.full_path),
-                    ActiveFile::Acts::Org::EXP_PREFIX + File.basename(self.path))
+        
+        # convert a string of org-formatted text to html
+        def string_to_html(org_string, options = {})
+          tmp = Tempfile.new("org-string")
+          tmp << org_string
+          tmp.flush
+          self.to_html(tmp.path, options)
         end
         
-        def clean_html?
-          File.exist?(self.html_path) and File.mtime(self.html_path) > File.mtime(self.full_path)
+        def html_path(path)
+          File.join(File.dirname(path),
+                    ActiveFile::Acts::Org::EXP_PREFIX + File.basename(path))
         end
-
-        def to_html(options = {})
+        
+        def to_html(path, options = {})
+          h_path = self.html_path(path)
           options = {:postamble => false}.merge(options)
-          self.class.emacs_run "(org-file-to-html  \"#{self.full_path}\")" unless self.clean_html?
-          return nil unless File.exist?(self.html_path)
-          html = File.read(self.html_path)
+          self.emacs_run("(org-file-to-html  \"#{path}\")") unless self.clean_html?(path)
+          return nil unless File.exist?(h_path)
+          html = File.read(h_path)
           # extract the body portion
           start_body = (html =~ /<body>/) + 6
           end_body = (html =~ /<\/body>/) - 1
@@ -42,6 +48,25 @@ module ActiveFile
           else
             body[(0..(body.index("<div id=\"postamble\">") - 1))]
           end
+        end
+        
+        def clean_html?(path)
+          h_path = self.html_path(path)
+          File.exist?(h_path) and File.mtime(h_path) > File.mtime(path)
+        end
+      end
+      
+      module InstanceMethods
+        def html_path
+          self.class.html_path(self.full_path)
+        end
+        
+        def clean_html?
+          self.class.clean_html?(self.full_path)
+        end
+        
+        def to_html(options = {})
+          self.class.to_html(self.full_path, options)
         end
       end
     end

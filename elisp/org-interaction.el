@@ -32,11 +32,26 @@ html as a string."
 		    (nth 5 (file-attributes file-path))))))
 	html-path
       (with-temp-filebuffer
-       file-path 
+       file-path
+       (org-mode)
        (save-window-excursion
 	 (org-export-as-html-to-buffer nil)
 	 (write-file html-path)
 	 (kill-buffer))))))
+
+;; ;; probably not going to use this since passing complicated string
+;; ;; to emacs on the command line is very iffy
+;; (defun org-string-to-html (org-string)
+;;   "Convert ORG-STRING to html as if it was an `org-mode'
+;; document, then return the html as a string."
+;;   (let* ((file-path (make-temp-file "org-string"))
+;; 	 (file-name (make-temp-file "org-string"))
+;; 	 (file-dir (file-name-directory file-path))
+;; 	 (html-path (expand-file-name (concat org-interaction-prefix file-name) file-dir)))
+;;     (org-file-to-html file-name)
+;;     (with-temp-buffer
+;;       (insert-file-contents html-path)
+;;       (read-buffer))))
 
 ;; customization
 (setq org-export-blocks-witheld '(hidden comment))

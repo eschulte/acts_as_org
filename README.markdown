@@ -5,8 +5,11 @@ shouldn't be used
 ActsAsOrg
 ==========
 
-Provides org-mode actions for ActiveFile records.  See the following
-for information on the relevant resources.
+Provides org-mode actions for ActiveFile records.  Org-mode is a
+plain-text format for "keeping notes, maintaining ToDo lists, doing
+project planning, and authoring" html, LaTeX, and Sweave documents.
+For more information on org-mode see [Org-Mode](http://orgmode.org/).
+See the following for information on the relevant resources.
 
 - ActiveFile (from [github](http://github.com/eschulte/active_file/tree/master))
 - Emacs (22 or later)
