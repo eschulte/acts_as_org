@@ -39,6 +39,26 @@ html as a string."
 	 (write-file html-path)
 	 (kill-buffer))))))
 
+(defun org-file-to-latex (file-path)
+  "Open up an org file, publish it to latex, and then return the
+latex as a string."
+  (let* ((file-name (file-name-nondirectory file-path))
+	 (file-dir (file-name-directory file-path))
+	 (latex-path (expand-file-name (concat org-interaction-prefix file-name ".tex") file-dir)))
+    (if (and (file-exists-p latex-path)
+	     (< 0 (time-to-seconds
+		   (time-subtract
+		    (nth 5 (file-attributes latex-path))
+		    (nth 5 (file-attributes file-path))))))
+	latex-path
+      (with-temp-filebuffer
+       file-path
+       (org-mode)
+       (save-window-excursion
+	 (org-export-as-latex-to-buffer nil)
+	 (write-file latex-path)
+	 (kill-buffer))))))
+
 ;; ;; probably not going to use this since passing complicated string
 ;; ;; to emacs on the command line is very iffy
 ;; (defun org-string-to-html (org-string)

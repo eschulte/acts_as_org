@@ -54,6 +54,24 @@ module ActiveFile
           h_path = self.html_path(path)
           File.exist?(h_path) and File.mtime(h_path) > File.mtime(path)
         end
+        
+        def latex_path(path)
+          File.join(File.dirname(path),
+                    ActiveFile::Acts::Org::EXP_PREFIX + File.basename(path) + ".tex")
+        end
+        
+        def to_latex(path, options = {})
+          e_path = self.latex_path(path)
+          options = {:postamble => false}.merge(options)
+          self.emacs_run("(org-file-to-latex  \"#{path}\")") unless self.clean_latex?(path)
+          return nil unless File.exist?(e_path)
+          html = File.read(e_path)
+        end
+        
+        def clean_latex?(path)
+          l_path = self.latex_path(path)
+          File.exist?(l_path) and File.mtime(l_path) > File.mtime(path)
+        end
       end
       
       module InstanceMethods
@@ -67,6 +85,18 @@ module ActiveFile
         
         def to_html(options = {})
           self.class.to_html(self.full_path, options)
+        end
+        
+        def latex_path
+          self.class.latex_path(self.full_path)
+        end
+        
+        def clean_latex?
+          self.class.clean_latex?(self.full_path)
+        end
+        
+        def to_latex(options = {})
+          self.class.to_latex(self.full_path, options)
         end
       end
     end
