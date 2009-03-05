@@ -23,9 +23,14 @@ module ActiveFile
         # convert a string of org-formatted text to html
         def string_to_html(org_string, options = {})
           tmp = Tempfile.new("org-string")
+          tmp << <<PREAMBLE
+#+TITLE nothing
+#+OPTIONS toc:nil ^:nil
+
+PREAMBLE
           tmp << org_string
           tmp.flush
-          self.to_html(tmp.path, options)
+          self.to_html(tmp.path, {:title => false}.merge(options))
         end
         
         def html_path(path)
@@ -35,19 +40,17 @@ module ActiveFile
         
         def to_html(path, options = {})
           h_path = self.html_path(path)
-          options = {:postamble => false}.merge(options)
+          options = {:title => true, :postamble => false, :full_html => false}.merge(options)
           self.emacs_run("(org-file-to-html  \"#{path}\")") unless self.clean_html?(path)
           return nil unless File.exist?(h_path)
           html = File.read(h_path)
+          return html if options[:full_html]
           # extract the body portion
           start_body = (html =~ /<body>/) + 6
           end_body = (html =~ /<\/body>/) - 1
           body = html[(start_body..end_body)]
-          if options[:postamble]
-            body
-          else
-            body[(0..(body.index("<div id=\"postamble\">") - 1))]
-          end
+          body = options[:postamble] ? body : body[(0..(body.index("<div id=\"postamble\">") - 1))]
+          options[:title] ? body : body.sub(/<h1.*\/h1>/i,'')
         end
         
         def clean_html?(path)
@@ -67,6 +70,7 @@ module ActiveFile
           return nil unless File.exist?(e_path)
           html = File.read(e_path)
         end
+        alias :to_tex :to_latex
         
         def clean_latex?(path)
           l_path = self.latex_path(path)
@@ -98,6 +102,7 @@ module ActiveFile
         def to_latex(options = {})
           self.class.to_latex(self.full_path, options)
         end
+        alias :to_tex :to_latex
       end
     end
   end
