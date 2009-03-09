@@ -27,10 +27,13 @@ module ActiveFile
 #+TITLE nothing
 #+OPTIONS toc:nil ^:nil
 
+* top
+
 PREAMBLE
-          tmp << org_string
+          tmp << org_string.gsub(/^(\*+) /, '*\1 ')
           tmp.flush
-          self.to_html(tmp.path, {:title => false}.merge(options))
+          raw = self.to_html(tmp.path, {:full_html => true}.merge(options))
+          raw[((raw.index("<div id=\"outline-container-1\" class=\"outline-2\">") - 1)..(raw.index("<div id=\"postamble\">") - 1))].sub("<h2 id=\"sec-1\">1 top </h2>", '')
         end
         
         def html_path(path)
