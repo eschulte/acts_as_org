@@ -5,6 +5,7 @@ module ActiveFile
       # value of `org-interaction-prefix' in
       # ../elisp/org-interaction.el
       EXP_PREFIX = ".exported_"
+      $no_batch ||= false
       
       def self.included(base)
         base.extend ActiveFile::Acts::Org::ClassMethods
@@ -17,7 +18,7 @@ module ActiveFile
         end
         
         def emacs_run(command)
-          %x{emacs -Q -batch -l #{File.join(File.dirname(__FILE__), "..", "elisp", "org-interaction.el")} -eval '#{command}'}
+          %x{emacs -Q #{$no_batch ? '' : '--batch'} -l #{File.join(File.dirname(__FILE__), "..", "elisp", "org-interaction.el")} -eval '#{command}'}
         end
         
         # convert a string of org-formatted text to html
