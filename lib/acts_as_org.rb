@@ -1,11 +1,12 @@
 module ActiveFile
   module Acts
     module Org
+      # command you are using to access your Emacs server (may also be gnuclient)
+      EMACS_CMD = "emacsclient"
       # *note*: if you change this value, you must also change the
       # value of `org-interaction-prefix' in
       # ../elisp/org-interaction.el
       EXP_PREFIX = ".exported_"
-      $no_batch ||= false
       
       def self.included(base)
         base.extend ActiveFile::Acts::Org::ClassMethods
@@ -17,9 +18,7 @@ module ActiveFile
           send(:include, ActiveFile::Acts::Org::InstanceMethods)
         end
         
-        def emacs_run(command)
-          %x{emacs -Q #{$no_batch ? '' : '--batch'} -l #{File.join(File.dirname(__FILE__), "..", "elisp", "org-interaction.el")} -eval '#{command}'}
-        end
+        def emacs_run(command) %x{#{EMACS_CMD} -eval '#{command}'} end
         
         # convert a string of org-formatted text to html
         def string_to_html(org_string, options = {})

@@ -39,8 +39,7 @@ html as a string."
        (save-window-excursion
 	 (org-export-as-html-to-buffer nil)
 	 (write-file html-path)
-	 (kill-buffer)))))
-  (save-buffers-kill-emacs t))
+	 (kill-buffer))))))
 
 (defun org-file-to-latex (file-path)
   "Open up an org file, publish it to latex, and then return the
@@ -60,8 +59,7 @@ latex as a string."
        (save-window-excursion
 	 (org-export-as-latex-to-buffer nil)
 	 (write-file latex-path)
-	 (kill-buffer)))))
-  (save-buffers-kill-emacs t))
+	 (kill-buffer))))))
 
 ;; customization
 (setq org-export-blocks-witheld '(hidden comment))
