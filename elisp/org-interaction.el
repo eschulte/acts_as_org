@@ -63,3 +63,6 @@ latex as a string."
 
 ;; customization
 (setq org-export-blocks-witheld '(hidden comment))
+
+;; Start the server
+(server-start)
