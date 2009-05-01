@@ -25,7 +25,7 @@ module ActiveFile
           tmp = Tempfile.new("org-string")
           tmp << <<PREAMBLE
 #+TITLE nothing
-#+OPTIONS toc:nil ^:nil
+#+OPTIONS toc:nil num:nil ^:nil
 
 * top
 
