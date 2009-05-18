@@ -18,7 +18,7 @@ module ActiveFile
           send(:include, ActiveFile::Acts::Org::InstanceMethods)
         end
         
-        def emacs_run(command) %x{#{EMACS_CMD} -eval '#{command}'} end
+        def emacs_run(command) %x{#{EMACS_CMD} --eval '#{command}'} end
         
         # convert a string of org-formatted text to html
         def string_to_html(org_string, options = {})
