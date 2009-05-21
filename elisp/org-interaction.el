@@ -1,10 +1,14 @@
-(let ((this-dir (file-name-directory (or load-file-name buffer-file-name))))
-  (add-to-list 'load-path this-dir))
-(require 'htmlize)
 (require 'org)
-(require 'org-exp-blocks)
 
 (setq font-lock-mode t)
+
+(defun refresh-then-find-file (file)
+  "Find file ensuring that the latest changes on disk are
+represented in the file."
+  (let (file-buf)
+    (while (setq file-buf (get-file-buffer file))
+      (kill-buffer file-buf))
+    (find-file file)))
 
 (defmacro with-temp-filebuffer (file &rest body)
   "Open FILE into a temporary buffer execute BODY there like
@@ -13,7 +17,7 @@ evaluating BODY."
   (let ((temp-result (make-symbol "temp-result"))
 	(temp-file (make-symbol "temp-file")))
     `(let (,temp-result ,temp-file)
-       (find-file ,file)
+       (refresh-then-find-file ,file)
        (setf ,temp-file (current-buffer))
        (setf ,temp-result (progn ,@body))
        (kill-buffer ,temp-file)
