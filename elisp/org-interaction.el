@@ -70,3 +70,7 @@ latex as a string."
 
 ;; Start the server
 (server-start)
+
+;; save the emacsclient server socket location
+(with-temp-file "/tmp/emacsclient-socket-dir"
+  (insert server-socket-dir))

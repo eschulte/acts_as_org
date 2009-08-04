@@ -2,7 +2,8 @@ module ActiveFile
   module Acts
     module Org
       # command you are using to access your Emacs server (may also be gnuclient)
-      EMACS_CMD = "emacsclient"
+      EMACSCLIENT_SOCKET_DIR = File.read("/tmp/emacsclient-socket-dir").chomp
+      EMACS_CMD = "emacsclient -s #{EMACSCLIENT_SOCKET_DIR}/server"
       # *note*: if you change this value, you must also change the
       # value of `org-interaction-prefix' in
       # ../elisp/org-interaction.el
