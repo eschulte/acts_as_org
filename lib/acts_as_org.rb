@@ -80,6 +80,24 @@ PREAMBLE
           l_path = self.latex_path(path)
           File.exist?(l_path) and File.mtime(l_path) > File.mtime(path)
         end
+
+        def pdf_path(path)
+          File.join(File.dirname(path),
+                    ActiveFile::Acts::Org::EXP_PREFIX + File.basename(path) + ".pdf")
+        end
+
+        def to_pdf(path, options = {})
+          p_path = self.pdf_path(path)
+          options = {:postamble => false}.merge(options)
+          self.emacs_run("(org-file-to-pdf  \"#{path}\")") unless self.clean_pdf?(path)
+          return nil unless File.exist?(p_path)
+          html = File.read(p_path)
+        end
+
+        def clean_pdf?(path)
+          p_path = self.pdf_path(path)
+          File.exist?(p_path) and File.mtime(p_path) > File.mtime(path)
+        end
       end
       
       module InstanceMethods
@@ -107,6 +125,19 @@ PREAMBLE
           self.class.to_latex(self.full_path, options)
         end
         alias :to_tex :to_latex
+
+        def pdf_path
+          self.class.pdf_path(self.full_path)
+        end
+
+        def clean_pdf?
+          self.class.clean_pdf?(self.full_path)
+        end
+
+        def to_pdf(options = {})
+          self.class.to_pdf(self.full_path, options)
+        end
+
       end
     end
   end
