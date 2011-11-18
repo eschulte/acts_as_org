@@ -1,4 +1,5 @@
 (require 'org)
+(require 'cl)
 
 (setq font-lock-mode t)
 
